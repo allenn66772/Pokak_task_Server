@@ -33,7 +33,7 @@ exports.createTaskController = async (req, res) => {
       return res.status(404).json("User not found");
     }
 
-    const newTask = new tasks({   // ✅ correct (tasks)
+    const newTask = new tasks({  
       title,
       description,
       color,
@@ -58,22 +58,39 @@ exports.createTaskController = async (req, res) => {
 
 
 // GET ALL TASKS (Logged-in User)
-exports.getTaskController = async (req, res) => {
+exports.getTodayTaskController = async (req, res) => {
   try {
-    // email from jwt middleware
     const userMail = req.payload;
 
-    // find user
     const user = await users.findOne({ email: userMail });
     if (!user) {
       return res.status(404).json("User not found");
     }
 
-    // find tasks of that user
-    const userTasks = await tasks.find({ userId: user._id });
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
 
-    res.status(200).json(userTasks);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
 
+    const todayTasks = await tasks.find({
+      userId: user._id,
+      date: { $gte: startOfDay, $lte: endOfDay }
+    });
+
+    res.status(200).json(todayTasks);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+
+//delete task controller
+exports.deleteTaskController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await tasks.findByIdAndDelete(id);
+    res.status(200).json("Task deleted successfully");
   } catch (error) {
     res.status(500).json(error);
   }

@@ -15,8 +15,7 @@ exports.userRegisterController = async (req, res) => {
     const existingUser = await users.findOne({ email });
 
     if (existingUser) {
-      // ❌ was 402
-      // ✅ correct status code
+    
       return res.status(409).json("User Already registered. Please Login");
     }
 
@@ -50,12 +49,12 @@ exports.userLoginController = async (req, res) => {
 
     if (existingUser) {
 
-      // 🔧 FIX 1: compare hashed password properly
+      
       const isMatch = await bcrypt.compare(password, existingUser.password);
 
       if (isMatch) {
 
-        // 🔧 FIX 2: res.json accepts only ONE object
+    
         const token = jwt.sign(
           { userMail: existingUser.email },
           process.env.JWT_SECRET_KEY
