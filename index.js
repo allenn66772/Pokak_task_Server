@@ -1,25 +1,21 @@
-const express=require("express")
+const express = require("express");
+require("dotenv").config();
+const router = require("./router");
+require("./db/connection");
+const cors = require("cors");
 
-require("dotenv").config()
+const pokaktaskserver = express();
 
-const router=require("./router")
-require("./db/connection")
+pokaktaskserver.use(cors());
+pokaktaskserver.use(express.json());
+pokaktaskserver.use(router);
 
-const cors=require("cors")
+const PORT = process.env.PORT || 3000;
 
+pokaktaskserver.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
-const pokaktaskserver=express()
-pokaktaskserver.use(cors())
-pokaktaskserver.use(express.json())
-pokaktaskserver.use(router)
-
-const PORT=3000
-
-pokaktaskserver.listen(PORT,()=>{
-    console.log(`Server started running in ${PORT}`);
-    
-})
-
-pokaktaskserver.get("/",(req,res)=>{
-    res.status(200).send("Pokak Task Server running")
-})
+pokaktaskserver.get("/", (req, res) => {
+  res.status(200).send("Pokak Task Server running");
+});
