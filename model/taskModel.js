@@ -1,69 +1,66 @@
-const mongoose=require("mongoose")
+const mongoose = require("mongoose");
 
-const taskSchema=new mongoose.Schema({
-    title:{
-        type:String,
-        required:true
+const taskSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
     },
     description: {
       type: String,
-      trim: true
+      trim: true,
     },
 
-    
     color: {
       type: String,
-      default: "blue"
+      default: "blue",
+    },
+    category: {
+      type: String,
+      default: "General",
     },
 
-   
     date: {
       type: Date,
-      required: true
+      required: true,
     },
 
-  
     isRepeatEnabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
 
-   
     repeatType: {
       type: String,
       enum: ["Daily", "Weekly", "Monthly"],
-      default: "Daily"
+      default: "Daily",
     },
 
-   
     repeatDays: {
       type: [String],
       enum: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      default: []
+      default: [],
     },
 
-    
     tags: {
       type: [String],
-      default: []
+      default: [],
     },
 
-   
     isCompleted: {
       type: Boolean,
-      default: false
+      default: false,
     },
 
-   
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
-      required: true
-    }
+      required: true,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
-)
-const tasks=mongoose.model("tasks",taskSchema)
-module.exports=tasks
+);
+const tasks = mongoose.model("tasks", taskSchema);
+module.exports = tasks;
